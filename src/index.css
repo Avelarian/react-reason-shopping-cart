@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 400 14px;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: #f0f0f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  width: 100%;
+  max-width: 1180px;
+  padding: 0 30px;
+  margin: 32px auto;
+}
+
+main ul {
+  width: 65%;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  list-style: none;
+}
+
+main ul li {
+  background: #fff;
+  padding: 24px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+main .container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+main .basketContainer {
+  width: 30%;
+  background: #fff;
+  padding: 24px;
+  position: relative;
+  border-radius: 4px;
+}
+
+main .basketContainer ul {
+  margin-top: 15px;
+  position: relative;
+}
+
+main .basketContainer .actionBox {
+  float: right;
+}
