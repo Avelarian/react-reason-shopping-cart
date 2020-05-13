@@ -1,86 +1,104 @@
-// type product = {
-//   id: int,
-//   img: string,
-//   name: string,
-//   description: string,
-//   price: float,
-// };
+open Belt;
 
-// type productsList = {products: list(product)};
+type product = {
+  id: int,
+  name: string,
+  description: string,
+  price: float,
+  mutable quantity: int,
+};
 
-// type basketList = {products: list(product)};
+type catalog = array(product);
+type basket = array(product);
 
-// type action =
-//   | AddToBasket(product)
-//   | RemoveFromBasket(product);
+let initialBasket = [||];
 
-// let toString = React.string;
+type action =
+  | AddToBasket(product)
+  | RemoveFromBasket(product);
 
-// let addToBasket = (productId, productsList, basketList) => {
-//   List.map(p => p.id === productId ? List.append([p], basketList) : basketList, productsList);
-//   List.filter(p => p.id !== productId, productsList);
-// };
-
-// let removeFromBasket = (productId, basketList, productsList) => {
-//   List.map(p => p.id === productId ? List.append([p], productsList) : productsList, basketList);
-//   List.filter(p => p.id !== productId, basketList);
-// };
+/* let addToBasket = (basket, item) => {
+  
+}; */
 
 [@react.component]
 let make = () => {
-  let (product, setProduct) = React.useState(() => {});
-  let (bList, setBList) = React.useState(() => [product]);
-  let (pList, setPList) = React.useState(() => []);
+  let (productsArray, setProductsArray) = React.useState(() => [|
+    {
+      id: 1,
+      name: "Product A",
+      description: "This is Product A",
+      price: 24.99,
+      quantity: 0,
+    },
+    {
+      id: 2,
+      name: "Product B",
+      description: "This is product B",
+      price: 4.99,
+      quantity: 0,
+    }
+  |]);
+
+  let (state, dispatch) = React.useReducer((state, action) => switch action {
+  | AddToBasket(product) => state->Array.concat([|product|])
+  | RemoveFromBasket(product) => state->Array.keep(p => {
+    p.id !== product.id
+  })
+  }, initialBasket);
 
   <main>
     <h1>
-      {React.string("React Reason Shopping Cart")}
+      {"React Reason Shopping Cart" -> React.string}
     </h1>
 
     <div className="container">
     
       <ul>
         (
-          List.map(p =>
+          Array.map(productsArray, product => 
             <li>
-              <img src=(p.img) />
+              {"Img" -> React.string}
               <div>
-                <strong>{React.string(p.name)}</strong>
-                <p>{React.string(p.description)}</p>
+                <strong>{product.name -> React.string}</strong>
+                <p>{product.description -> React.string}{" | "->React.string}{product.quantity->React.int}</p>
               </div>
-              <button onClick={_ => setCounter(_ => counter - 1)}>
-                {React.string("Add to basket")}
-              </button>
-            </li>, pList
+              <button onClick={_ => dispatch(AddToBasket(product))}> "Add to basket"->React.string </button>
+            </li>
           )
-        )
+        )->React.array
       </ul>
 
       <div className="basketContainer">
-        {React.string("Basket")}
+        {"Basket" -> React.string}
         <ul>
-          {React.string("ITEMS")}
-          <li>
-            {React.string("2 x xxx")}
-          </li>
+          {"ITEMS" -> React.string}
+          (
+            state->Array.map(product => 
+              <li>
+                {product.name -> React.string}
+                <button onClick={_ => dispatch(RemoveFromBasket(product))}> "X"->React.string </button>
+              </li>
+            )
+          )->React.array
         </ul>
         
         <ul>
-          {React.string("TOTALS")}
+          {"TOTALS" -> React.string}
           <li>
-            {React.string("TVA 20% : 4.00")}
+            {"TVA: " -> React.string}
           </li>
           <li>
-            {React.string("24.00 TTC")}
+            {"TOTAL TTC" -> React.string}
           </li>
         </ul>
 
         <div className="actionBox">
           <button>
-            {React.string("Cancel Cart")}
+            {"CANCEL CART" -> React.string}
           </button>
           <button>
-            {React.string("Pay")}
+            {"PAY" -> React.string}
           </button>
         </div>
       </div>

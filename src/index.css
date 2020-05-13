@@ -28,11 +28,13 @@ main ul {
 }
 
 main ul li {
+  height: 80px;
   background: #fff;
   padding: 24px;
   position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 main .container {
