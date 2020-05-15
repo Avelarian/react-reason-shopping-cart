@@ -37,14 +37,14 @@ let productsReducer = (state, action) => {
       switch (containInBasket(state, element)) {
         | false => {
           Js.log(1);
-          //setTotal(_ => total + element.price);
+          setTotal(_ => total + element.price);
           state->Array.concat([|element|]);
         }
         | true => {
           Js.log(2);
           state->Array.map(product => {
             switch (product.id === element.id) {
-            | true => { /*setTotal(_ => total + element.price);*/ { ...product, quantity: product.quantity + 1 }}
+            | true => { setTotal(_ => total + element.price); { ...product, quantity: product.quantity + 1 }}
             | false => product
             };
           })
@@ -67,8 +67,6 @@ let productsReducer = (state, action) => {
   };
 }
 
-let (state, dispatch) = React.useReducer(productsReducer, basket);
-
 [@react.component]
 let make = () => {
   let (products, setProducts) = React.useState(() => [|
@@ -88,6 +86,7 @@ let make = () => {
   }
   |]);
   let (total, setTotal) = React.useState(() => 0);
+  let (state, dispatch) = React.useReducer(productsReducer, basket);
   
   <main>
     <h1>
