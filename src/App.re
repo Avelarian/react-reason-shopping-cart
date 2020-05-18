@@ -138,10 +138,16 @@ let make = () => {
            ->React.array}
         </ul>
         <ul>
-          "TOTALS: "->React.string
+          "TOTAL: "->React.string
           state.total->React.int
-          <li> "TVA: "->React.string </li>
-          <li> "TOTAL TTC"->React.string </li>
+          <li>
+            "TVA: "->React.string
+            {(state.total * 20 / 100)->React.int}
+          </li>
+          <li>
+            "TOTAL TTC: "->React.string
+            {(state.total + state.total * 20 / 100)->React.int}
+          </li>
         </ul>
         <div className="actionBox">
           <button> "CANCEL CART"->React.string </button>
