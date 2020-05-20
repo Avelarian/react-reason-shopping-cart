@@ -1,27 +1,9 @@
-open Belt;
-
-open Basket;
+let products: array(Basket.product) = [%bs.raw {| require('./data.json')|}];
 
 [@react.component]
 let make = () => {
-  let (state, dispatch) = React.useReducer(productsReducer, Basket.basket);
-
-  let products: array(Basket.product) = [|
-    {
-      id: 1,
-      name: "Product A",
-      description: "This is Product A",
-      price: 25,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      name: "Product B",
-      description: "This is product B",
-      price: 5,
-      quantity: 1,
-    },
-  |];
+  let (state, dispatch) =
+    React.useReducer(Basket.reducer, Basket.initialState);
 
   <main>
     <h1> "React Reason Shopping Cart"->React.string </h1>
@@ -39,7 +21,7 @@ let make = () => {
                    product.quantity->React.int
                  </p>
                </div>
-               <button onClick={_ => dispatch(AddToBasket(product))}>
+               <button onClick={_ => dispatch(Add(product))}>
                  "Add to basket"->React.string
                </button>
              </li>
@@ -56,7 +38,7 @@ let make = () => {
                  product.name->React.string
                  " | "->React.string
                  product.quantity->React.int
-                 <button onClick={_ => dispatch(RemoveFromBasket(product))}>
+                 <button onClick={_ => dispatch(Remove(product))}>
                    "X"->React.string
                  </button>
                </li>

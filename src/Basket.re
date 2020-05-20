@@ -1,5 +1,3 @@
-open Belt;
-
 type product = {
   id: int,
   name: string,
@@ -8,29 +6,26 @@ type product = {
   quantity: int,
 };
 
-type basketRecord = {
+type state = {
   products: array(product),
   total: int,
 };
 
-let basket = {products: [||], total: 0};
+let initialState = {products: [||], total: 0};
 
 type action =
-  | AddToBasket(product)
-  | RemoveFromBasket(product);
+  | Add(product)
+  | Remove(product);
 
-let productsReducer = (state, action) => {
+let reducer = (state, action) => {
   switch (action) {
-  | AddToBasket(element) =>
-    switch (
-      state.products->Array.getBy(product => element.id === product.id)
-      !== None
-    ) {
-    | false => {
+  | Add(element) =>
+    switch (state.products->Array.getBy(product => element.id === product.id)) {
+    | None => {
         products: state.products->Array.concat([|element|]),
         total: state.total + element.price,
       }
-    | true => {
+    | Some(_) => {
         products:
           state.products
           ->Array.map(product => {
@@ -43,32 +38,30 @@ let productsReducer = (state, action) => {
         total: state.total + element.price,
       }
     }
-  | RemoveFromBasket(element) =>
-    state.products
-    ->Array.getBy(product =>
-        element.id === product.id && product.quantity === 1
-      )
-    !== None
-      ? {
-        {
-          products:
-            state.products->Array.keep(product => product.id !== element.id),
-          total: state.total - element.price,
-        };
+  | Remove(element) =>
+    switch (
+      state.products
+      ->Array.getBy(product =>
+          element.id === product.id && product.quantity === 1
+        )
+    ) {
+    | Some(_) => {
+        products:
+          state.products->Array.keep(product => product.id !== element.id),
+        total: state.total - element.price,
       }
-      : {
-        {
-          products:
-            state.products
-            ->Array.map(product => {
-                product.id === element.id
-                  ? {
-                    {...product, quantity: product.quantity - 1};
-                  }
-                  : product
-              }),
-          total: state.total - element.price,
-        };
+    | None => {
+        products:
+          state.products
+          ->Array.map(product => {
+              product.id === element.id
+                ? {
+                  {...product, quantity: product.quantity - 1};
+                }
+                : product
+            }),
+        total: state.total - element.price,
       }
+    }
   };
 };
