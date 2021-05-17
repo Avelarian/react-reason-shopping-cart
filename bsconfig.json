@@ -7,7 +7,11 @@
     "dir": "src",
     "subdirs": true
   },
-  "bsc-flags": ["-bs-super-errors", "-bs-no-version-header"],
+  "bsc-flags": [
+    "-bs-super-errors",
+    "-bs-no-version-header",
+    "-open Belt"
+  ],
   "package-specs": [
     {
       "module": "commonjs",
@@ -16,6 +20,8 @@
   ],
   "suffix": ".bs.js",
   "namespace": true,
-  "bs-dependencies": ["reason-react"],
+  "bs-dependencies": [
+    "reason-react"
+  ],
   "refmt": 3
 }
